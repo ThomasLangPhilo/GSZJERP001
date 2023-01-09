@@ -1,0 +1,268 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <div class="container">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                产品研发列表
+            </div>
+        <div style="text-align: right">
+            <input id="btnAdd" type="button" value="新建产品" class="btn btn-primary"  >
+        </div>
+            <!-- Table -->
+            <table class="table table-bordered">
+                 <tr>
+
+                <th>名称</th>
+                <th>备注</th>
+                <th>原材料</th>
+                <th>工厂</th>
+                <th>仓库</th>
+                <th>管理员</th>
+
+            </tr>
+
+            {% for item in queryset %}
+                <tr>
+                    <td> {{ item.product }}</td>
+                    <td>  {{ item.remark }}</td>
+                    <td>  {{ item.stocks }}</td>
+                    <td>  {{ item.industry }}</td>
+                    <td>  {{ item.stockbase }}</td>
+                    <td>  {{ item.admin }}</td>
+
+                        <td>
+                            <input pid="{{ item.id }}" type="button" class="btn btn-primary btn-edit " value="编辑">
+                            <input pid="{{ item.id }}" type="button" class="btn btn-danger  btn-delete" value="删除">
+                        </td>
+                    </tr>
+                {% endfor %}
+
+
+            </table>
+        </div>
+        <ul class="pagination">
+            {{ page_string }}
+        </ul>
+    </div>
+    <!-- Modal新建/编辑产品对话框 -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">产品</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="formAdd">
+                        <div class="clearfix">
+                            {% for field in form %}
+                                <div class="col-xs-6">
+                                    <div class="form-group" style="position: relative;">
+                                        <label> {{ field.label }}:</label>
+                                        {{ field }}
+                                        <span class="error-msg"
+                                              style="color: red;position: absolute;margin-bottom: 20px;"></span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                        </div>
+
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" id="btnSave" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal删除产品对话框 -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+
+
+            <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h4>是否确定删除</h4>
+                <p style="margin: 10px 0px;">相关数据删除</p>
+                <p style="text-align: right">
+                    <button id="btnConfirmDelete" type="button" class="btn btn-danger" data-dismiss="modal">确定
+                    </button>
+                    <button type="button" class="btn btn-default " data-dismiss="modal">取消</button>
+                </p>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+        var DELETE_ID;
+        var EDIT_ID;
+
+        $(function () {
+            bindBtnproductAddEvent();
+            bindbtnproductSaveEvent();
+            bindbtnproductDeleteEvent();
+            bindbtnproductConfirmDelete();
+            bindbtnproductEditEvent();
+        })
+
+        function bindBtnproductAddEvent() {
+
+            $("#btnAdd").click(function () {
+                EDIT_ID = undefined;
+                //清空
+                $('#formAdd')[0].reset;
+
+                $('#myModalLabel').text('新建');
+
+                $('#myModal').modal('show')
+            })
+        }
+
+        function bindbtnproductSaveEvent() {
+            $("#btnSave").click(function () {
+                //清除错误信息
+                $(".error-msg").empty();
+                //编辑和添加用的是同一个对话框 所以判断:
+                if (EDIT_ID) {
+                    //编辑
+                    doedit()
+                } else {
+                    //添加
+                    doadd();
+                }
+            })
+        }
+
+        //向后台发送请求（do add)
+        function doadd() {
+            $.ajax({
+                url: "/product/add/",
+                type: "POST",
+                data: $("#formAdd").serialize(),
+                dataType: "JSON",
+                success: function (res) {
+                    if (res.status) {
+                        //alert("创建成功");
+                        //清空表单
+                        $("#formAdd")[0].reset;
+                        //关闭对话框
+                        $('#myModal').modal('hide');
+                        //刷新
+                        location.reload();
+                    } else {
+                        $.each(res.error, function (name, errorList) {
+                            $("#id_" + name).next().text(errorList[0]);
+                        })
+                    }
+
+                }
+            })
+        }
+
+        function doedit(){
+             $.ajax({
+                url: "/product/edit/?pid="+EDIT_ID,
+                type: "POST",
+                data: $("#formAdd").serialize(),
+                dataType: "JSON",
+                success: function (res) {
+                    if (res.status) {
+                        //alert("创建成功");
+                        //清空表单
+                        $("#formAdd")[0].reset;
+                        //关闭对话框
+                        $('#myModal').modal('hide');
+                        //刷新
+                        location.reload();
+                    } else {
+                        if(res.tips){
+                            alert(res.tips)
+                        }else
+                        //错误信息展示
+                        $.each(res.error, function (name, errorList) {
+                            $("#id_" + name).next().text(errorList[0]);
+                        })
+                    }
+
+                }
+            })
+        }
+
+        function bindbtnproductDeleteEvent() {
+            $(".btn-delete").click(function () {
+                // alert("点击了删除")
+                $("#deleteModal").modal('show');
+                //获取当前的ID并赋值给全部变量
+                DELETE_ID = $(this).attr("pid")
+            })
+        }
+
+        function bindbtnproductConfirmDelete() {
+            $("#btnConfirmDelete").click(function () {
+                $.ajax({
+                    url: "/product/delete/",
+                    type: "GET",
+                    data: {
+                        pid: DELETE_ID
+                    },
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+
+                            //简单的：
+                            location.reload();
+                        } else {
+                            //删除失败
+                            alert(res.error())
+                        }
+                    }
+                })
+            })
+        }
+
+        function bindbtnproductEditEvent() {
+
+            $(".btn-edit").click(function () {
+                var pid = $(this).attr('pid');
+                EDIT_ID = pid;
+
+                //发送ajax去后台获取数据
+                $.ajax({
+                    url: '/product/detail/',
+                    type: 'get',
+                    data: {
+                        pid: pid
+                    },
+                    dataType: 'JSON',
+                    success: function (res) {
+                        if (res.status) {
+                            //赋值
+                            $.each(res.data, function (name, value) {
+                                $('#id_' + name).val(value);
+                            })
+                            //修改对话框名字
+                            $('#myModalLabel').text('编辑');
+                            //alert('111')
+                            //显示模态对话框
+                            $('#myModal').modal('show');
+                        } else {
+                            alert(res.error);
+                        }
+                    }
+
+                })
+
+            });
+        }
+
+    </script>
+{% endblock %}

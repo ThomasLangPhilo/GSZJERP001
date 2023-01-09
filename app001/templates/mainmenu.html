@@ -1,0 +1,55 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <div class="page-header" style="background-color:goldenrod;margin-top: 0 ;text-align:center">
+
+        <div style="font-size:60px;position: relative ;color: darkmagenta" >这个软件是适用于小企业的ERP软件</div>
+        <div style="font-size:20px ;color: darkmagenta">主要目的是为了方便进行产品的开发——原料采购——生产——入库——销售（订单）的管理
+            同时可以生成分析图表
+        </div>
+    </div>
+    <div class="container" style="background-color: #f0ad4e ;margin-bottom: 10px;text-align:center">
+        <div class="panel panel-primary">
+
+            <div class="panel-heading">
+                <h3 class="panel-title">产品研发</h3>
+            </div>
+            <div class="panel-body">
+                主要进行产品的研发管理，编辑和分析，点击添加产品按钮,添加一个完整的产品你需要:产品的原材料（分为种类和供应商）,需要将其投入加工的生产工厂,此外，你仍需要准备备用的仓库以存放产品
+            </div>
+
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">原料采购</h3>
+            </div>
+            <div class="panel-body">
+                <span> 在这个模块你可以添加、编辑、加工、退货、删除你的原材料</span>
+                <span>原材料的种类在产品研发里定义，不能在这里修改</span>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">生产</h3>
+            </div>
+            <div class="panel-body">
+                生产模块负责加工原材料 在产品研发里添加你的工厂，在原料模块选择投入加工，估算出生产周期 并根据需求（用户模块）定制生产计划。完工后投入仓库
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">入库</h3>
+            </div>
+            <div class="panel-body">
+                存货的管理，影响订单的发送和退款
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">销售（订单）</h3>
+            </div>
+            <div class="panel-body">
+                显示目前的订单
+            </div>
+        </div>
+    </div>
+{% endblock %}
