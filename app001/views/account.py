@@ -3,8 +3,6 @@ from django import forms
 from app001 import models
 from app001.utils.bootstrap import BootStrapForm
 from app001.utils.encrypt import md5
-
-
 class LoginForm(BootStrapForm):
     username = forms.CharField(
         label="用户名",
@@ -22,6 +20,7 @@ class LoginForm(BootStrapForm):
     def clean_password(self):
         pwd = self.cleaned_data.get("password")
         return md5(pwd)
+        #return pwd
 
 
 def login(request):
