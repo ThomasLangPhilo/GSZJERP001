@@ -35,6 +35,7 @@ class rawstock(models.Model):
     amount = models.SmallIntegerField(verbose_name="数量", default=None, )
     price = models.SmallIntegerField(verbose_name="单价", default=None, )
     admin = models.ForeignKey(verbose_name="管理员", to=Admin, on_delete=models.CASCADE, )
+
     def __str__(self):
         return self.name
     # 无约束
@@ -74,9 +75,9 @@ class industry(models.Model):
 class stockbase(models.Model):
     """仓库"""
 
-    stockbasename = models.CharField(verbose_name="仓库名称", max_length=64,)
+    stockbasename = models.CharField(verbose_name="仓库名称", max_length=64, )
     adress = models.CharField(verbose_name="仓库地址", max_length=128, )
-    maxnumber = models.SmallIntegerField(verbose_name="容纳数量",)
+    maxnumber = models.SmallIntegerField(verbose_name="容纳数量", )
 
     def __str__(self):
         return self.stockbasename
@@ -91,6 +92,7 @@ class product(models.Model):
     remark = models.CharField(verbose_name="备注", max_length=32, default=None, null=True)
     admin = models.ForeignKey(verbose_name="管理员", to=Admin, on_delete=models.CASCADE, )
 
+
 class Order(models.Model):
     """订单"""
     oid = models.CharField(verbose_name="订单号", max_length=64)
@@ -103,3 +105,18 @@ class Order(models.Model):
     status = models.SmallIntegerField(verbose_name="状态", choices=status_choices, default=1)
     admin = models.ForeignKey(verbose_name="管理员", to=Admin, on_delete=models.CASCADE)
 
+
+class LYKJSYS(models.Model):
+    '''LYKJSYS郎岩会计系统的数据库'''
+    typt_L_choices = (
+        (1, "借"),
+        (2, "贷"),
+        (3, "待处理"),
+    )
+    kemu_L = models.ForeignKey(verbose_name="会计科目", to=account_t, on_delete=models.CASCADE)
+    zijin_L = models.SmallIntegerField(verbose_name='资金数量', default=0)
+    time_L = models.TimeField(verbose_name='时间')
+    number_L = models.CharField(verbose_name='编号',max_length=64)
+    type_L = models.SmallIntegerField(verbose_name='借/贷', choices=typt_L_choices, )
+    admin_L = models.ForeignKey(verbose_name='管理员', to=Admin, on_delete=models.CASCADE)
+    note = models.CharField(verbose_name='备注',default=None,max_length=64)
