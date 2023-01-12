@@ -16,7 +16,7 @@ Including another URLconf
 
 from django.urls import path
 from app001 import admin
-from app001.views import mainmenu, stock, user, admin, account, task, order, chart, product, industry,stockbase
+from app001.views import mainmenu, stock, user, admin, account, task, order, chart, product, industry,stockbase,stock2
 
 urlpatterns = [
     # 超级管理员
@@ -40,17 +40,23 @@ urlpatterns = [
 
     # 仓库管理
     path('stockbase/list/', stockbase.stockbase_list),
+    path('stockbase/list/', stockbase.stockbase_list),
     path('stockbase/add/', stockbase.stockbase_add),
     path('stockbase/edit/', stockbase.stockbase_edit),
     path('stockbase/detail/', stockbase.stockbase_detail),
     path('stockbase/delete/', stockbase.stockbase_delete),
 
     # 原材料管理
-    path('stock/', stock.stock),
-    path('stockadd/', stock.stockadd),
-    path('stock/edit/', stock.stock_edit),
-    path('stock/detail/', stock.stock_detail),
-    path('stock/delete/', stock.stock_delete),
+    path('stock/', stock2.stock2),
+    # path('stock/', stock.stock),
+    # path('stockadd/', stock.stockadd),
+    # path('stock/edit/', stock.stock_edit),
+    # path('stock/detail/', stock.stock_detail),
+    # path('stock/delete/', stock.stock_delete),
+    path('stockadd/', stock2.stockadd),
+    path('stock/edit/', stock2.stock_edit),
+    path('stock/detail/', stock2.stock_detail),
+    path('stock/delete/', stock2.stock_delete),
     # 管理员管理
     path('admin/list/', admin.admin_list),
     path('admin/<int:nid>/edit/', admin.admin_edit),

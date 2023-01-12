@@ -24,7 +24,8 @@ class users(models.Model):
 class account_t(models.Model):
     "科目表"
     name_a = models.CharField(max_length=64)
-
+    def __str__(self):
+        return self.name_a
 
 class rawstock(models.Model):
     "原材料库存"
@@ -115,8 +116,8 @@ class LYKJSYS(models.Model):
     )
     kemu_L = models.ForeignKey(verbose_name="会计科目", to=account_t, on_delete=models.CASCADE)
     zijin_L = models.SmallIntegerField(verbose_name='资金数量', default=0)
-    time_L = models.TimeField(verbose_name='时间')
-    number_L = models.CharField(verbose_name='编号',max_length=64)
+    time_L = models.TimeField(verbose_name='时间',null=True,blank=True)
+    number_L = models.CharField(verbose_name='编号',max_length=64,null=True,blank=True)
     type_L = models.SmallIntegerField(verbose_name='借/贷', choices=typt_L_choices, )
     admin_L = models.ForeignKey(verbose_name='管理员', to=Admin, on_delete=models.CASCADE)
-    note = models.CharField(verbose_name='备注',default=None,max_length=64)
+    note_L = models.CharField(verbose_name='备注',null=True,max_length=64,blank=True)
