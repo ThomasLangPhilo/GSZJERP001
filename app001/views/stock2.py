@@ -4,11 +4,10 @@ from django.http import JsonResponse
 from app001 import models
 from app001.utils.pagination import pagination
 from django.views.decorators.csrf import csrf_exempt
-from app001.forms.form_LYKJSYS import LYKJSYS_Mforms_a,LYKJSYS_Mforms_b
+from app001.forms.form_LYKJSYS import LYKJSYS_Mforms_a, LYKJSYS_Mforms_b
 
 
 #   目前是把数据库的数据打包成字典传到queryset_a和_b(区分借方数据和贷方数据），通过分页函数pagnation变成pageobject对象 打包进context字典传进html中。
-
 def stock2(request):
     """原材料列表"""
     #  数据查询
@@ -20,7 +19,7 @@ def stock2(request):
     queryset_a = models.LYKJSYS.objects.filter(type_L='1').order_by('-id')
     # 这个是 数据库LYJKSYS贷方的数据
     queryset_b = models.LYKJSYS.objects.filter(type_L='2').order_by('-id')
-    #表单的form
+    # 表单的form
     form_a = LYKJSYS_Mforms_a
     form_b = LYKJSYS_Mforms_b
     page_object_a = pagination(request, queryset_a)
@@ -40,18 +39,20 @@ def stock2(request):
 def stockadd(request):
     """新建原材料（AJAX）"""
     form_a = LYKJSYS_Mforms_a(data=request.POST)
-    form_b = LYKJSYS_Mforms_a(data=request.POST)
+    form_b = LYKJSYS_Mforms_b(data=request.POST)
     if (form_a.is_valid() and form_b.is_valid()):
         # 当前登录的管理员ID(订单号自动添加管理员ID
         form_a.instance.admin_L_id = request.session["info"]['id']
         form_b.instance.admin_L_id = request.session["info"]['id']
+        # 在这里把借和贷的种类传到表单中
         form_a.instance.type_L = 1
         form_b.instance.type_L = 2
+        # 提交表单到数据库
         form_a.save()
         form_b.save()
 
         return JsonResponse({"status": True})
-    return JsonResponse({"status": False, 'error': form_a.errors})
+    return JsonResponse({"status": False, 'error': (form_a.errors, form_b.errors)})
 
 
 def stock_detail(request):
@@ -84,7 +85,7 @@ def stock_edit(request):
     row_object = models.LYKJSYS.objects.filter(id=stockid).first()
     if not row_object:
         return JsonResponse({"status": False, 'tips': "删除失败"})
-    form = LYKJSYS_Mforms(data=request.POST, instance=row_object)
+    form = LYKJSYS_Mforms_a(data=request.POST, instance=row_object)
     if form.is_valid():
         form.save()
         return JsonResponse({"status": True})
