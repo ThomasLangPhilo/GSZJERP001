@@ -48,18 +48,18 @@ def order_add(request):
 
 def order_delete(request):
     """删除订单"""
-    uid = request.GET.get('uid')
-    exists = models.Order.objects.filter(id=uid).exists()
+    id = request.GET.get('id')
+    exists = models.Order.objects.filter(id=id).exists()
     if not exists:
         return JsonResponse({"status": False, 'error': "删除失败"})
-    models.Order.objects.filter(id=uid).delete()
+    models.Order.objects.filter(id=id).delete()
     return JsonResponse({"status": True})
 
 
 def order_detail(request):
     '''获取订单详细'''
-    uid = request.GET.get('uid')
-    row_dict = models.Order.objects.filter(id=uid).values('title', 'price', 'status').first()
+    id = request.GET.get('id')
+    row_dict = models.Order.objects.filter(id=id).values('title', 'price', 'status').first()
     if not row_dict:
         return JsonResponse({"status": False, 'error': "不存在数据"})
     # 从数据库获取对象
@@ -73,8 +73,8 @@ def order_detail(request):
 @csrf_exempt
 def order_edit(request):
     '''订单编辑'''
-    uid = request.GET.get("uid")
-    row_object = models.Order.objects.filter(id=uid).first()
+    id = request.GET.get("id")
+    row_object = models.Order.objects.filter(id=id).first()
     if not row_object:
         return JsonResponse({"status": False, 'tips': "删除失败"})
     form = OrderModelForm(data=request.POST, instance=row_object)

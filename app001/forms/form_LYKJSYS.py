@@ -8,6 +8,7 @@ class LYKJSYS_Mforms(BootStrapModelForm):
     # validators = [Regex...]
     class Meta:
         model = models.LYKJSYS
+
         exclude = ['admin_L','time_L','number_L',]
 
 

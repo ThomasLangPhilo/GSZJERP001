@@ -33,8 +33,8 @@
 
 
                         <td>
-                            <input uid="{{ obj.id }}" type="button" class="btn btn-primary btn-edit " value="编辑">
-                            <input uid="{{ obj.id }}" type="button" class="btn btn-danger  btn-delete" value="删除">
+                            <input id="{{ obj.id }}" type="button" class="btn btn-primary btn-edit " value="编辑">
+                            <input id="{{ obj.id }}" type="button" class="btn btn-danger  btn-delete" value="删除">
                         </td>
                     </tr>
                 {% endfor %}
@@ -174,7 +174,7 @@
 
         function doedit(){
              $.ajax({
-                url: "/order/edit/?uid="+EDIT_ID,
+                url: "/order/edit/?id="+EDIT_ID,
                 type: "POST",
                 data: $("#formAdd").serialize(),
                 dataType: "JSON",
@@ -206,7 +206,7 @@
                 // alert("点击了删除")
                 $("#deleteModal").modal('show');
                 //获取当前的ID并赋值给全部变量
-                DELETE_ID = $(this).attr("uid")
+                DELETE_ID = $(this).attr("id")
             })
         }
 
@@ -216,7 +216,7 @@
                     url: "/order/delete/",
                     type: "GET",
                     data: {
-                        uid: DELETE_ID
+                        id: DELETE_ID
                     },
                     dataType: "JSON",
                     success: function (res) {
@@ -236,15 +236,15 @@
         function bindbtnEditEvent() {
 
             $(".btn-edit").click(function () {
-                var uid = $(this).attr('uid');
-                EDIT_ID = uid;
+                var id = $(this).attr('id');
+                EDIT_ID = id;
 
                 //发送ajax去后台获取数据
                 $.ajax({
                     url: '/order/detail/',
                     type: 'get',
                     data: {
-                        uid: uid
+                        id: id
                     },
                     dataType: 'JSON',
                     success: function (res) {

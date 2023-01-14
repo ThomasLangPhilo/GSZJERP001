@@ -1,9 +1,5 @@
 from django import forms
 
-
-
-
-
 class BootStrap:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -17,7 +13,6 @@ class BootStrap:
                 field.widget.attrs = {
                     "class": "form-control",
                     "placeholder": field.label
-
                 }
 
 

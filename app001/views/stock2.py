@@ -7,6 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 from app001.forms.form_LYKJSYS import LYKJSYS_Mforms
 
 
+#   目前是把数据库的数据打包成字典传到queryset_a和_b(区分借方数据和贷方数据），通过分页函数pagnation变成pageobject对象 打包进context字典传进html中。
+
 def stock2(request):
     """原材料列表"""
     #  数据查询
@@ -14,11 +16,18 @@ def stock2(request):
     search_data = request.GET.get('q', "")
     if search_data:
         data_dict["contains"] = search_data
-    queryset = models.LYKJSYS.objects.all().order_by('-id')
+    # 这个是 数据库LYJKSYS借方的数据
+    queryset_a = models.LYKJSYS.objects.filter(type_L='1').order_by('-id')
+    # 这个是 数据库LYJKSYS贷方的数据
+    queryset_b = models.LYKJSYS.objects.filter(type_L='2').order_by('-id')
+    #表单的form
     form = LYKJSYS_Mforms
-    page_object = pagination(request, queryset)
-    context = {'queryset': page_object.page_queryset,  # 分页的数据
-               "page_string": page_object.htme(),  # 分页的页码
+    page_object_a = pagination(request, queryset_a)
+    page_object_b = pagination(request, queryset_b)
+    context = {'queryset_a': page_object_a.page_queryset,  # 分页的数据a(借方）
+               'queryset_b': page_object_b.page_queryset,  # 分页的数据b（贷方）
+               "page_string_a": page_object_a.htme(),  # 分页的页码
+               "page_string_b": page_object_b.htme(),  # 分页的页码
                "search_data": search_data,
                'form': form,
                }
@@ -36,6 +45,7 @@ def stockadd(request):
 
         return JsonResponse({"status": True})
     return JsonResponse({"status": False, 'error': form.errors})
+
 
 def stock_detail(request):
     "获取编辑原材料的数据"
