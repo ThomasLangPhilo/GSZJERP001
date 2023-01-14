@@ -4,14 +4,18 @@ from django.forms import ValidationError
 from app001.utils.bootstrap import BootStrapModelForm
 
 
-class LYKJSYS_Mforms(BootStrapModelForm):
+class LYKJSYS_Mforms_a(BootStrapModelForm):
     # validators = [Regex...]
     class Meta:
         model = models.LYKJSYS
+        exclude = ['admin_L', 'time_L', 'number_L','type_L' ]
 
-        exclude = ['admin_L','time_L','number_L',]
+class LYKJSYS_Mforms_b(BootStrapModelForm):
+        # validators = [Regex...]
+     class Meta:
+            model = models.LYKJSYS
 
-
+            exclude = ['admin_L', 'time_L', 'number_L', 'type_L']
     # def clean_stock(self):
     #     print(self.instance.pk)
     #     txt_rawstock = self.cleaned_data["rawstock"]
@@ -19,5 +23,3 @@ class LYKJSYS_Mforms(BootStrapModelForm):
     #     if exists:
     #         raise ValidationError("已存在名称")
     #     return txt_rawstock
-
-

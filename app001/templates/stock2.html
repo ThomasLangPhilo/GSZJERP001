@@ -65,9 +65,11 @@
                 <div class="modal-body" style="background: beige;width: 588px;height: 788px">
                     <form id="formAdd" style="float: left ;width: 234px;">
                         <div class="clearfix">
-                            {% for field in form %}
+                            {% for field in form_a %}
+
                                 <div class="col-xs-6">
-                                    <div class="form-group" style="position: relative;">
+                                    <div class="form-group" style="position: relative;" >
+                                        <span style="color: green">借</span>
                                         <label> {{ field.label }}:</label>
                                         {{ field }}
 
@@ -81,9 +83,10 @@
                     </form>
                     <form id="formAdd" style="float: right ;width: 234px;">
                         <div class="clearfix">
-                            {% for field in form %}
+                            {% for field in form_b %}
                                 <div class="col-xs-6">
                                     <div class="form-group" style="position: relative;">
+                                        <span style="color: green">贷</span>
                                         <label> {{ field.label }}:</label>
                                         {{ field }}
                                         <span class="error-msg"
@@ -162,8 +165,6 @@
                     //添加
                     doadd();
                 }
-
-
             })
         }
 

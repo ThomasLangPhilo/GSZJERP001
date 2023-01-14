@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from app001 import models
 from app001.utils.pagination import pagination
 from django.views.decorators.csrf import csrf_exempt
-from app001.forms.form_LYKJSYS import LYKJSYS_Mforms
+from app001.forms.form_LYKJSYS import LYKJSYS_Mforms_a,LYKJSYS_Mforms_b
 
 
 #   目前是把数据库的数据打包成字典传到queryset_a和_b(区分借方数据和贷方数据），通过分页函数pagnation变成pageobject对象 打包进context字典传进html中。
@@ -21,7 +21,8 @@ def stock2(request):
     # 这个是 数据库LYJKSYS贷方的数据
     queryset_b = models.LYKJSYS.objects.filter(type_L='2').order_by('-id')
     #表单的form
-    form = LYKJSYS_Mforms
+    form_a = LYKJSYS_Mforms_a
+    form_b = LYKJSYS_Mforms_b
     page_object_a = pagination(request, queryset_a)
     page_object_b = pagination(request, queryset_b)
     context = {'queryset_a': page_object_a.page_queryset,  # 分页的数据a(借方）
@@ -29,7 +30,8 @@ def stock2(request):
                "page_string_a": page_object_a.htme(),  # 分页的页码
                "page_string_b": page_object_b.htme(),  # 分页的页码
                "search_data": search_data,
-               'form': form,
+               'form_a': form_a,
+               'form_b': form_b,
                }
     return render(request, 'stock2.html', context)
 
@@ -37,14 +39,19 @@ def stock2(request):
 @csrf_exempt
 def stockadd(request):
     """新建原材料（AJAX）"""
-    form = LYKJSYS_Mforms(data=request.POST)
-    if form.is_valid():
+    form_a = LYKJSYS_Mforms_a(data=request.POST)
+    form_b = LYKJSYS_Mforms_a(data=request.POST)
+    if (form_a.is_valid() and form_b.is_valid()):
         # 当前登录的管理员ID(订单号自动添加管理员ID
-        form.instance.admin_L_id = request.session["info"]['id']
-        form.save()
+        form_a.instance.admin_L_id = request.session["info"]['id']
+        form_b.instance.admin_L_id = request.session["info"]['id']
+        form_a.instance.type_L = 1
+        form_b.instance.type_L = 2
+        form_a.save()
+        form_b.save()
 
         return JsonResponse({"status": True})
-    return JsonResponse({"status": False, 'error': form.errors})
+    return JsonResponse({"status": False, 'error': form_a.errors})
 
 
 def stock_detail(request):
