@@ -39,14 +39,17 @@ def stock2(request):
 def stockadd(request):
     """新建原材料（AJAX）"""
     form_a = LYKJSYS_Mforms_a(data=request.POST)
+    print(request.POST)
     form_b = LYKJSYS_Mforms_b(data=request.POST)
+    print(request.POST)
+
     if (form_a.is_valid() and form_b.is_valid()):
         # 当前登录的管理员ID(订单号自动添加管理员ID
         form_a.instance.admin_L_id = request.session["info"]['id']
         form_b.instance.admin_L_id = request.session["info"]['id']
         # 在这里把借和贷的种类传到表单中
-        form_a.instance.type_L = 1
-        form_b.instance.type_L = 2
+        form_a.instance.type_L = '1'
+        form_b.instance.type_L = '2'
         # 提交表单到数据库
         form_a.save()
         form_b.save()

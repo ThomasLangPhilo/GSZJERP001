@@ -9,13 +9,14 @@ class LYKJSYS_Mforms_a(BootStrapModelForm):
     class Meta:
         model = models.LYKJSYS
         exclude = ['admin_L', 'time_L', 'number_L','type_L' ]
-
+    # prefix = 'a'
 class LYKJSYS_Mforms_b(BootStrapModelForm):
         # validators = [Regex...]
      class Meta:
             model = models.LYKJSYS
 
             exclude = ['admin_L', 'time_L', 'number_L', 'type_L']
+     # prefix = 'b'
     # def clean_stock(self):
     #     print(self.instance.pk)
     #     txt_rawstock = self.cleaned_data["rawstock"]
