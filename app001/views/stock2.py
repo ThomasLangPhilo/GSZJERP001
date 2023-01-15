@@ -38,12 +38,14 @@ def stock2(request):
 @csrf_exempt
 def stockadd(request):
     """新建原材料（AJAX）"""
+    '''将post的数据存放到form中 就是在这里出现问题 本来应该不同的数据放到各自的表单中 但是现在只存放了一个表单的数据到两个form中 应该是识别问题'''
     form_a = LYKJSYS_Mforms_a(data=request.POST)
-    print(request.POST)
+
     form_b = LYKJSYS_Mforms_b(data=request.POST)
-    print(request.POST)
+
 
     if (form_a.is_valid() and form_b.is_valid()):
+
         # 当前登录的管理员ID(订单号自动添加管理员ID
         form_a.instance.admin_L_id = request.session["info"]['id']
         form_b.instance.admin_L_id = request.session["info"]['id']

@@ -63,12 +63,12 @@
                     <h4 class="modal-title" id="myModalLabel">新建原材料</h4>
                 </div>
                 <div class="modal-body" style="background: beige;width: 588px;height: 788px">
-                    <form id="formAdd" style="float: left ;width: 234px;">
+                    <form id="formAdd_a" style="float: left ;width: 234px;">
                         <div class="clearfix">
                             {% for field in form_a %}
 
                                 <div class="col-xs-6">
-                                    <div class="form-group" style="position: relative;" >
+                                    <div class="form-group" style="position: relative;">
                                         <span style="color: green">借</span>
                                         <label> {{ field.label }}:</label>
                                         {{ field }}
@@ -81,7 +81,7 @@
 
                         </div>
                     </form>
-                    <form id="formAdd" style="float: right ;width: 234px;">
+                    <form id="formAdd_b" style="float: right ;width: 234px;">
                         <div class="clearfix">
                             {% for field in form_b %}
                                 <div class="col-xs-6">
@@ -133,19 +133,21 @@
         var EDIT_ID;
 
         $(function () {
-            bindBtnAddEvent();
-            bindbtnSaveEvent();
-            bindbtnDeleteEvent();
-            bindbtnConfirmDelete();
-            bindbtnEditEvent();
+            bindBtnAddEvent();//点击添加弹出对话框
+            bindbtnSaveEvent();//在对话框中写完数据并保存
+            bindbtnDeleteEvent();//点击了删除按钮
+            bindbtnConfirmDelete();//确认删除
+            bindbtnEditEvent();//点击编辑按钮
         })
-
+        //在点击添加按钮之后 1清空表单数据 2 修改模块文字 3 显示模块
+        //
         function bindBtnAddEvent() {
 
             $("#btnAdd").click(function () {
                 EDIT_ID = undefined;
                 //清空
-                $('#formAdd')[0].reset;
+                $('#formAdd_a')[0].reset;
+                $('#formAdd_b')[0].reset;
 
                 $('#myModalLabel').text('新建');
 
@@ -169,23 +171,25 @@
         }
 
         //向后台发送请求（do add)
+        //目前来
         function doadd() {
             $.ajax({
                 url: "/stockadd/",
                 type: "POST",
-                data: $("#formAdd").serialize(),
+                data: $("#formAdd_a,#formAdd_b").serialize(),
                 dataType: "JSON",
                 success: function (res) {
 
                     if (res.status) {
-                        //alert("创建成功");
+
                         //清空表单
-                        $("#formAdd")[0].reset;
+                        $("#formAdd_a,#formAdd_b")[0].reset;
                         //关闭对话框
                         $('#myModal').modal('hide');
                         //刷新
                         location.reload();
                     } else {
+
                         $.each(res.error, function (name, errorList) {
                             $("#id_" + name).next().text(errorList[0]);
                         })
@@ -199,13 +203,13 @@
             $.ajax({
                 url: "/stock/edit/?stockid=" + EDIT_ID,
                 type: "POST",
-                data: $("#formAdd").serialize(),
+                data: $("#formAdd_a,#formAdd_b").serialize(),
                 dataType: "JSON",
                 success: function (res) {
                     if (res.status) {
                         //alert("创建成功");
                         //清空表单
-                        $("#formAdd")[0].reset;
+                        $("#formAdd_a,#formAdd_b")[0].reset;
                         //关闭对话框
                         $('#myModal').modal('hide');
                         //刷新
