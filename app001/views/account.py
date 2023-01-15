@@ -19,8 +19,8 @@ class LoginForm(BootStrapForm):
 
     def clean_password(self):
         pwd = self.cleaned_data.get("password")
-        return md5(pwd)
-        #return pwd
+        # return md5(pwd)
+        return pwd
 
 
 def login(request):
