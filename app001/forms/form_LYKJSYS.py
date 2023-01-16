@@ -24,3 +24,5 @@ class LYKJSYS_Mforms_b(BootStrapModelForm):
     #     if exists:
     #         raise ValidationError("已存在名称")
     #     return txt_rawstock
+
+#123
